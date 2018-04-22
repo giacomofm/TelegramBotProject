@@ -46,16 +46,16 @@ public class JekOrologio extends TelegramLongPollingBot {
 
 	private static String hours() {
 		int hours = 0;
-		if (LocalTime.now().isBefore(end_time)) {
-			hours = end_time.getHour() - LocalTime.now().getHour();
+		if (BotUtil.now().isBefore(end_time)) {
+			hours = end_time.getHour() - BotUtil.now().getHour();
 		}
 		return hours != 1 ? hours + " ORE" : hours + " ORA";
 	}
 
 	private static String minutes() {
 		int minutes = 0;
-		if (LocalTime.now().isBefore(end_time)) {
-			minutes = 60 - LocalTime.now().getMinute();
+		if (BotUtil.now().isBefore(end_time)) {
+			minutes = 60 - BotUtil.now().getMinute();
 		}
 		return minutes != 1 ? minutes + " MINUTI" : minutes + " MINUTO";
 	}
