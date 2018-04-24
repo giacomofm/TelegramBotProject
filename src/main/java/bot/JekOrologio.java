@@ -1,5 +1,6 @@
 package bot;
 
+import java.time.Duration;
 import java.time.LocalTime;
 
 import org.telegram.telegrambots.api.methods.send.SendMessage;
@@ -28,36 +29,35 @@ public class JekOrologio extends TelegramLongPollingBot {
 	@Override
 	public void onUpdateReceived(final Update update) {
 		if (BotUtil.checkMessage(update.getMessage(), ASKTIMECOMMAND)) {
-			long chat_id = update.getMessage().getChatId();
-			SendMessage message = new SendMessage().setChatId(chat_id).setText(getTime());
+			final long chat_id = update.getMessage().getChatId();
+			final SendMessage message = new SendMessage().setChatId(chat_id).setText(getTime());
 			try {
 				execute(message.enableMarkdown(true));
-			} catch (TelegramApiException e) {
+			} catch (final TelegramApiException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
 	private static String getTime() {
-		StringBuilder sb = new StringBuilder("*");
-		sb.append(hours()).append(" E ").append(minutes()).append("*");
+		final StringBuilder sb = new StringBuilder("*");
+		final Duration between = Duration.between(BotUtil.now(), end_time);
+		sb.append(hours(between.getSeconds())).append(" E ").append(minutes(between.getSeconds())).append("*");
 		return sb.toString();
 	}
 
-	private static String hours() {
-		int hours = 0;
-		if (BotUtil.now().isBefore(end_time)) {
-			hours = end_time.getHour() - BotUtil.now().getHour();
-		}
-		return hours != 1 ? hours + " ORE" : hours + " ORA";
+	private static String minutes(final long seconds) {
+		long minutes = 0;
+		if (seconds > 0)
+			minutes = Math.abs((seconds / 60) % 60);
+		return minutes != 1 ? minutes + " MINUTI" : minutes + " MINUTO";
 	}
 
-	private static String minutes() {
-		int minutes = 0;
-		if (BotUtil.now().isBefore(end_time)) {
-			minutes = 60 - BotUtil.now().getMinute();
-		}
-		return minutes != 1 ? minutes + " MINUTI" : minutes + " MINUTO";
+	private static String hours(final long seconds) {
+		long hours = 0;
+		if (seconds > 0)
+			hours = Math.abs((seconds / (60 * 60)) % 60);
+		return hours != 1 ? hours + " ORE" : hours + " ORA";
 	}
 
 }
