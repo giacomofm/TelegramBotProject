@@ -12,7 +12,7 @@ import bot.util.BotUtil;
 
 public class JekOrologio extends TelegramLongPollingBot {
 
-	public static final String ASKTIMECOMMAND = "/porcodio";
+	public static final String ASKTIMECOMMAND = "porcodio";
 
 	private static final LocalTime end_time = LocalTime.of(18, 0);
 
