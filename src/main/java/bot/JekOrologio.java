@@ -12,9 +12,11 @@ import bot.util.BotUtil;
 
 public class JekOrologio extends TelegramLongPollingBot {
 
-	public static final String ASKTIMECOMMAND = "porcodio";
+	public static final String ASK_END_TIME_COMMAND = "porcodio";
+	public static final String ASK_LUNCH_TIME_COMMAND = "diocane";
 
 	private static final LocalTime end_time = LocalTime.of(18, 0);
+	private static final LocalTime lunch_time = LocalTime.of(13, 0);
 
 	@Override
 	public String getBotUsername() {
@@ -26,22 +28,32 @@ public class JekOrologio extends TelegramLongPollingBot {
 		return "555689661:AAHs7lWaHnQefPekuXCUcQKTPa9KSxNwKME";
 	}
 
-	@Override
-	public void onUpdateReceived(final Update update) {
-		if (BotUtil.checkMessage(update.getMessage(), ASKTIMECOMMAND)) {
-			final long chat_id = update.getMessage().getChatId();
-			final SendMessage message = new SendMessage().setChatId(chat_id).setText(getTime());
-			try {
-				execute(message.enableMarkdown(true));
-			} catch (final TelegramApiException e) {
-				e.printStackTrace();
-			}
+	private void send(final SendMessage message) {
+		try {
+			execute(message.enableMarkdown(true));
+		} catch (final TelegramApiException e) {
+			e.printStackTrace();
 		}
 	}
 
-	private static String getTime() {
+	@Override
+	public void onUpdateReceived(final Update update) {
+		long chatId = 0;
+		if (update.hasMessage())
+			chatId = update.getMessage().getChatId();
+
+		if (BotUtil.checkMessage(update.getMessage(), ASK_END_TIME_COMMAND)) {
+			send(new SendMessage().setChatId(chatId).setText(getTime(end_time)));
+		}
+
+		if (BotUtil.checkMessage(update.getMessage(), ASK_LUNCH_TIME_COMMAND)) {
+			send(new SendMessage().setChatId(chatId).setText(getTime(lunch_time)));
+		}
+	}
+
+	private static String getTime(final LocalTime endTime) {
 		final StringBuilder sb = new StringBuilder("*");
-		final Duration between = Duration.between(BotUtil.now(), end_time);
+		final Duration between = Duration.between(BotUtil.now(), endTime);
 		sb.append(hours(between.getSeconds())).append(" E ").append(minutes(between.getSeconds())).append("*");
 		return sb.toString();
 	}
