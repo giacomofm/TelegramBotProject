@@ -1,13 +1,30 @@
 package bot;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
+import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
+import bot.util.BotUtil;
+
 public class Yoer extends TelegramLongPollingBot {
 
-	public static final String YO = "yo";
+	public static final String START_ROUTINE_COMMAND = "yo?";
+
+	private static final KeyboardButton keyboardButtonA = new KeyboardButton("yo!");
+	private static final KeyboardButton keyboardButtonB = new KeyboardButton("nope");
+	private static final KeyboardRow keyboardRow = new KeyboardRow();
+	{
+		keyboardRow.add(keyboardButtonA);
+		keyboardRow.add(keyboardButtonB);
+	}
+	private static final List<KeyboardRow> keyboard = Arrays.asList(keyboardRow);
 
 	@Override
 	public String getBotUsername() {
@@ -21,14 +38,20 @@ public class Yoer extends TelegramLongPollingBot {
 
 	@Override
 	public void onUpdateReceived(final Update update) {
-		if (update.hasMessage()) {
-			long chat_id = update.getMessage().getChatId();
-			SendMessage message = new SendMessage().setChatId(chat_id).setText(YO);
-			try {
-				execute(message);
-			} catch (TelegramApiException e) {
-				e.printStackTrace();
-			}
+		Long chatId = 0L;
+		if (BotUtil.checkMessage(update.getMessage(), START_ROUTINE_COMMAND)) {
+			chatId = update.getMessage().getChatId();
+			startRoutine(chatId);
+		}
+	}
+
+	private void startRoutine(final Long chatId) {
+		try {
+			execute(new SendMessage().setChatId(chatId)//
+					.setText(keyboardButtonA.getText())//
+					.setReplyMarkup(new ReplyKeyboardMarkup().setKeyboard(keyboard).setOneTimeKeyboard(true)));
+		} catch (final TelegramApiException e) {
+			e.printStackTrace();
 		}
 	}
 
