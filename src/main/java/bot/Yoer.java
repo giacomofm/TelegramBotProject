@@ -50,7 +50,7 @@ public class Yoer extends TelegramLongPollingBot {
 		}
 		if (BotUtil.checkMessage(update.getMessage(), keyboardButtonA.getText())
 				|| BotUtil.checkMessage(update.getMessage(), keyboardButtonB.getText())) {
-			closeRoutine(chatId);
+			closeRoutine(chatId, update.getMessage());
 		}
 	}
 
@@ -64,11 +64,12 @@ public class Yoer extends TelegramLongPollingBot {
 		}
 	}
 
-	private void closeRoutine(final Long chatId) {
+	private void closeRoutine(final Long chatId, final Message message) {
 		try {
 			execute(new SendMessage().setChatId(chatId)//
 					.setText(":+1:")//
-					.setReplyMarkup(new ReplyKeyboardRemove()));
+					.setReplyToMessageId(message.getMessageId())//
+					.setReplyMarkup(new ReplyKeyboardRemove().setSelective(true)));
 		} catch (final TelegramApiException e) {
 			e.printStackTrace();
 		}
