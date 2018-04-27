@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.telegram.telegrambots.api.methods.send.SendMessage;
+import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardButton;
@@ -15,7 +16,9 @@ import bot.util.BotUtil;
 
 public class Yoer extends TelegramLongPollingBot {
 
-	public static final String START_ROUTINE_COMMAND = "yo?";
+	public static final String ADDITIONAL_TEXT = " c'e'! Chi si aggiunge?";
+
+	public static final String START_ROUTINE_COMMAND = "yoexe";
 
 	private static final KeyboardButton keyboardButtonA = new KeyboardButton("yo!");
 	private static final KeyboardButton keyboardButtonB = new KeyboardButton("nope");
@@ -41,14 +44,14 @@ public class Yoer extends TelegramLongPollingBot {
 		Long chatId = 0L;
 		if (BotUtil.checkMessage(update.getMessage(), START_ROUTINE_COMMAND)) {
 			chatId = update.getMessage().getChatId();
-			startRoutine(chatId);
+			startRoutine(chatId, update.getMessage());
 		}
 	}
 
-	private void startRoutine(final Long chatId) {
+	private void startRoutine(final Long chatId, final Message message) {
 		try {
 			execute(new SendMessage().setChatId(chatId)//
-					.setText(keyboardButtonA.getText())//
+					.setText(message.getFrom().getFirstName() + ADDITIONAL_TEXT)//
 					.setReplyMarkup(new ReplyKeyboardMarkup().setKeyboard(keyboard).setOneTimeKeyboard(true)));
 		} catch (final TelegramApiException e) {
 			e.printStackTrace();
