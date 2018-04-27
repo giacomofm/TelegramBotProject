@@ -18,6 +18,8 @@ public class JekOrologio extends TelegramLongPollingBot {
 	private static final LocalTime end_time = LocalTime.of(18, 0);
 	private static final LocalTime lunch_time = LocalTime.of(13, 0);
 
+	private static final String lunch_time_additional_text = "_AL PRANZO_";
+
 	@Override
 	public String getBotUsername() {
 		return "JekOrologioBot";
@@ -48,6 +50,7 @@ public class JekOrologio extends TelegramLongPollingBot {
 
 		if (BotUtil.checkMessage(update.getMessage(), ASK_LUNCH_TIME_COMMAND)) {
 			send(new SendMessage().setChatId(chatId).setText(getTime(lunch_time)));
+			send(new SendMessage().setChatId(chatId).setText(lunch_time_additional_text));
 		}
 	}
 
