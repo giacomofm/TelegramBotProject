@@ -7,6 +7,7 @@ import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -42,9 +43,14 @@ public class Yoer extends TelegramLongPollingBot {
 	@Override
 	public void onUpdateReceived(final Update update) {
 		Long chatId = 0L;
-		if (BotUtil.checkMessage(update.getMessage(), START_ROUTINE_COMMAND)) {
+		if (update.hasMessage())
 			chatId = update.getMessage().getChatId();
+		if (BotUtil.checkMessage(update.getMessage(), START_ROUTINE_COMMAND)) {
 			startRoutine(chatId, update.getMessage());
+		}
+		if (BotUtil.checkMessage(update.getMessage(), keyboardButtonA.getText())
+				|| BotUtil.checkMessage(update.getMessage(), keyboardButtonB.getText())) {
+			closeRoutine(chatId);
 		}
 	}
 
@@ -52,7 +58,17 @@ public class Yoer extends TelegramLongPollingBot {
 		try {
 			execute(new SendMessage().setChatId(chatId)//
 					.setText(message.getFrom().getFirstName() + ADDITIONAL_TEXT)//
-					.setReplyMarkup(new ReplyKeyboardMarkup().setKeyboard(keyboard).setOneTimeKeyboard(true)));
+					.setReplyMarkup(new ReplyKeyboardMarkup().setKeyboard(keyboard)));
+		} catch (final TelegramApiException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void closeRoutine(final Long chatId) {
+		try {
+			execute(new SendMessage().setChatId(chatId)//
+					.setText(":+1:")//
+					.setReplyMarkup(new ReplyKeyboardRemove().setSelective(true)));
 		} catch (final TelegramApiException e) {
 			e.printStackTrace();
 		}
