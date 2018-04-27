@@ -68,7 +68,7 @@ public class Yoer extends TelegramLongPollingBot {
 		try {
 			execute(new SendMessage().setChatId(chatId)//
 					.setText(":+1:")//
-					.setReplyMarkup(new ReplyKeyboardRemove().setSelective(true)));
+					.setReplyMarkup(new ReplyKeyboardRemove()));
 		} catch (final TelegramApiException e) {
 			e.printStackTrace();
 		}
