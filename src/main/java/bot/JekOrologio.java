@@ -32,6 +32,8 @@ public class JekOrologio extends TelegramLongPollingBot {
 	private static final LocalDateTime end_time = now().withHour(18).withMinute(0);
 	private static final LocalDateTime lunch_time = now().withHour(13).withMinute(0);
 
+	private static final int seconds_to_weekend = 60 * 10;
+
 	private static final String lunch_time_additional_text = " _AL PRANSO_";
 	private static final String weekend_additional_text = " _AL WEEKEND_";
 	private static final String in_weekend_text = "GODITI IL WEEKEND";
@@ -97,7 +99,7 @@ public class JekOrologio extends TelegramLongPollingBot {
 	private static String getWeekEndTime() {
 		final StringBuilder sb = new StringBuilder("*");
 		final Duration between = Duration.between(now(), firstFriday());
-		if (between.getSeconds() > 360)
+		if (between.getSeconds() > seconds_to_weekend)
 			sb.append(hours(between.getSeconds())).append("*").append(weekend_additional_text);
 		else
 			sb.append(in_weekend_text).append("*");
@@ -110,7 +112,7 @@ public class JekOrologio extends TelegramLongPollingBot {
 		case SUNDAY:
 			return now();
 		default:
-			return now().with(TemporalAdjusters.nextOrSame(DayOfWeek.FRIDAY)).withHour(18).withMinute(1);
+			return now().with(TemporalAdjusters.nextOrSame(DayOfWeek.FRIDAY)).withHour(18).withMinute(0);
 		}
 	}
 
