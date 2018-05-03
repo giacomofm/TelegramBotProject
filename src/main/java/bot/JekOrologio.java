@@ -1,11 +1,12 @@
 package bot;
 
 import static bot.util.BotUtil.checkMessage;
-import static bot.util.BotUtil.now;
+import static bot.util.BotUtil.dateTimeNow;
+import static bot.util.BotUtil.timeNow;
 
 import java.time.DayOfWeek;
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAdjusters;
 
@@ -29,8 +30,8 @@ public class JekOrologio extends TelegramLongPollingBot {
 	 */
 	public static final String ASK_WEEKEND_TIME_COMMAND = "madonnavacca";
 
-	private static final LocalDateTime end_time = now().withHour(18).withMinute(0);
-	private static final LocalDateTime lunch_time = now().withHour(13).withMinute(0);
+	private static final LocalTime end_time = LocalTime.of(18, 0);
+	private static final LocalTime lunch_time = LocalTime.of(13, 0);
 
 	private static final int seconds_to_weekend = 60 * 10;
 
@@ -75,9 +76,9 @@ public class JekOrologio extends TelegramLongPollingBot {
 		}
 	}
 
-	private static String getTime(final LocalDateTime endTime) {
+	private static String getTime(final LocalTime endTime) {
 		final StringBuilder sb = new StringBuilder("*");
-		final Duration between = Duration.between(now(), endTime);
+		final Duration between = Duration.between(timeNow(), endTime);
 		sb.append(hours(between.getSeconds())).append(" E ").append(minutes(between.getSeconds())).append("*");
 		return sb.toString();
 	}
@@ -98,7 +99,7 @@ public class JekOrologio extends TelegramLongPollingBot {
 
 	private static String getWeekEndTime() {
 		final StringBuilder sb = new StringBuilder("*");
-		final Duration between = Duration.between(now(), firstFriday());
+		final Duration between = Duration.between(dateTimeNow(), firstFriday());
 		if (between.getSeconds() > seconds_to_weekend)
 			sb.append(hours(between.getSeconds())).append("*").append(weekend_additional_text);
 		else
@@ -107,12 +108,12 @@ public class JekOrologio extends TelegramLongPollingBot {
 	}
 
 	private static Temporal firstFriday() {
-		switch (now().getDayOfWeek()) {
+		switch (dateTimeNow().getDayOfWeek()) {
 		case SATURDAY:
 		case SUNDAY:
-			return now();
+			return dateTimeNow();
 		default:
-			return now().with(TemporalAdjusters.nextOrSame(DayOfWeek.FRIDAY)).withHour(18).withMinute(0);
+			return dateTimeNow().with(TemporalAdjusters.nextOrSame(DayOfWeek.FRIDAY)).withHour(18).withMinute(0);
 		}
 	}
 
