@@ -2,9 +2,10 @@ package bot.commons.utils;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 
 import org.telegram.telegrambots.api.objects.Message;
+
+import bot.commons.BotConstants;
 
 public class BotUtil {
 
@@ -13,11 +14,11 @@ public class BotUtil {
 	}
 
 	public static LocalTime timeNow() {
-		return LocalTime.now(ZoneId.of("Europe/Rome"));
+		return LocalTime.now(BotConstants.ZONE_ID);
 	}
 
 	public static LocalDateTime dateTimeNow() {
-		return LocalDateTime.now(ZoneId.of("Europe/Rome"));
+		return LocalDateTime.now(BotConstants.ZONE_ID);
 	}
 
 }
