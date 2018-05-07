@@ -85,15 +85,17 @@ public class JekOrologio extends TelegramLongPollingBot {
 
 	private static String minutes(final long seconds) {
 		long minutes = 0;
-		if (seconds > 0)
-			minutes = Math.abs((seconds / 60) % 60);
+		if (seconds > 0) {
+			final long hours = Math.abs(seconds / (60 * 60));
+			minutes = Math.abs((seconds - (hours * 60 * 60)) / 60);
+		}
 		return minutes != 1 ? minutes + " MINUTI" : minutes + " MINUTO";
 	}
 
 	private static String hours(final long seconds) {
 		long hours = 0;
 		if (seconds > 0)
-			hours = Math.abs((seconds / (60 * 60)) % 60);
+			hours = Math.abs(seconds / (60 * 60));
 		return hours != 1 ? hours + " ORE" : hours + " ORA";
 	}
 
