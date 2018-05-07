@@ -1,4 +1,4 @@
-package bot;
+package bot.services;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,7 +13,7 @@ import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
-import bot.util.BotUtil;
+import bot.commons.utils.BotUtil;
 
 public class Yoer extends TelegramLongPollingBot {
 

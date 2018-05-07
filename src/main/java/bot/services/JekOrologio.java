@@ -1,8 +1,8 @@
-package bot;
+package bot.services;
 
-import static bot.util.BotUtil.checkMessage;
-import static bot.util.BotUtil.dateTimeNow;
-import static bot.util.BotUtil.timeNow;
+import static bot.commons.utils.BotUtil.checkMessage;
+import static bot.commons.utils.BotUtil.dateTimeNow;
+import static bot.commons.utils.BotUtil.timeNow;
 
 import java.time.DayOfWeek;
 import java.time.Duration;

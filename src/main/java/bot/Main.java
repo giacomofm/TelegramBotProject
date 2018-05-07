@@ -4,6 +4,9 @@ import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.TelegramBotsApi;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
+import bot.services.JekOrologio;
+import bot.services.Yoer;
+
 /**
  * <ol>
  * <li>inizializzo il contesto delle api</li>
