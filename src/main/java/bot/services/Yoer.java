@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.telegram.telegrambots.api.methods.send.SendMessage;
+import org.telegram.telegrambots.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -59,6 +60,8 @@ public class Yoer extends TelegramLongPollingBot {
 			execute(new SendMessage().setChatId(chatId)//
 					.setText(message.getFrom().getFirstName() + ADDITIONAL_TEXT)//
 					.setReplyMarkup(new ReplyKeyboardMarkup().setKeyboard(keyboard)));
+
+			closeRoutine(chatId, message);
 		} catch (final TelegramApiException e) {
 			e.printStackTrace();
 		}
@@ -66,10 +69,12 @@ public class Yoer extends TelegramLongPollingBot {
 
 	private void closeRoutine(final Long chatId, final Message message) {
 		try {
-			execute(new SendMessage().setChatId(chatId)//
+			final Message replay = execute(new SendMessage().setChatId(chatId)//
 					.setText(":+1:")//
 					.setReplyToMessageId(message.getMessageId())//
 					.setReplyMarkup(new ReplyKeyboardRemove().setSelective(true)));
+
+			execute(new DeleteMessage().setChatId(replay.getChatId()).setMessageId(replay.getMessageId()));
 		} catch (final TelegramApiException e) {
 			e.printStackTrace();
 		}

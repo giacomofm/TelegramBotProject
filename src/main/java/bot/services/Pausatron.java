@@ -13,8 +13,6 @@ import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
-import bot.commons.BotConstants;
-
 public class Pausatron extends TelegramLongPollingBot implements Job {
 
 	public static final String START_COMMAND = "start";
@@ -63,7 +61,8 @@ public class Pausatron extends TelegramLongPollingBot implements Job {
 	}
 
 	public static void schedule(final Scheduler sched) throws SchedulerException {
-		final JobDetail job = JobBuilder.newJob(Pausatron.class).withIdentity("PausatronJob", BotConstants.QUARTZ_GROUP).build();
+		final JobDetail jobA = JobBuilder.newJob(Pausatron.class).withIdentity("PausatronJob", "group1").build();
+		final JobDetail jobB = JobBuilder.newJob(Pausatron.class).withIdentity("PausatronJob", "group2").build();
 
 		final Trigger triggerA = TriggerBuilder.newTrigger().withIdentity("PausatronTriggerA", "group1")//
 				.startNow()//
@@ -71,14 +70,14 @@ public class Pausatron extends TelegramLongPollingBot implements Job {
 						.inTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Rome"))))//
 				.build();
 
-		final Trigger triggerB = TriggerBuilder.newTrigger().withIdentity("PausatronTriggerB", "group1")//
+		final Trigger triggerB = TriggerBuilder.newTrigger().withIdentity("PausatronTriggerB", "group2")//
 				.startNow()//
 				.withSchedule(CronScheduleBuilder.cronSchedule("0 0 16 ? * MON,TUE,WED,THU,FRI *")//
 						.inTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Rome"))))//
 				.build();
 
-		sched.scheduleJob(job, triggerA);
-		sched.scheduleJob(job, triggerB);
+		sched.scheduleJob(jobA, triggerA);
+		sched.scheduleJob(jobB, triggerB);
 	}
 
 }
