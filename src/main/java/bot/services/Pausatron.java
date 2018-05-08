@@ -72,7 +72,7 @@ public class Pausatron extends TelegramLongPollingBot implements Job {
 
 		final Trigger triggerB = TriggerBuilder.newTrigger().withIdentity("PausatronTriggerB", "group2")//
 				.startNow()//
-				.withSchedule(CronScheduleBuilder.cronSchedule("0 0 16 ? * MON,TUE,WED,THU,FRI *")//
+				.withSchedule(CronScheduleBuilder.cronSchedule("0 30 15 ? * MON,TUE,WED,THU,FRI *")//
 						.inTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Rome"))))//
 				.build();
 
