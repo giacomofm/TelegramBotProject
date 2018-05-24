@@ -52,6 +52,16 @@ public class BotUtil {
 			List<String> lines = Files.readAllLines(path);
 			lines.removeIf(s -> s.contains(chatId.toString()));
 			// TODO: rimuovere la singola riga o aggiornare l'intero elenco?
+			lines.forEach(s -> rewrite(path, s));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void rewrite(final Path path, final String s) {
+		String row = s + '\n';
+		try {
+			Files.write(path, row.getBytes());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
