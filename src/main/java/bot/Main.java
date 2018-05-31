@@ -8,6 +8,7 @@ import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.TelegramBotsApi;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
+import bot.services.DetailsDetector;
 import bot.services.JekOrologio;
 import bot.services.Pausatron;
 import bot.services.Yoer;
@@ -33,6 +34,8 @@ public class Main {
 			System.out.println("JekOrologio inizializzato");
 			botsApi.registerBot(new Pausatron());
 			System.out.println("Pausatron inizializzato");
+			botsApi.registerBot(new DetailsDetector());
+			System.out.println("DetailsDetector inizializzato");
 			startQuartzJob();
 		} catch (final TelegramApiException | SchedulerException e) {
 			e.printStackTrace();
