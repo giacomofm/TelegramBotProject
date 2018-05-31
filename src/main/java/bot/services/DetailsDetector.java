@@ -8,6 +8,8 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 public class DetailsDetector extends TelegramLongPollingBot {
 
+	private static final Character end_line = '\n';
+
 	@Override
 	public String getBotUsername() {
 		return "DetailsDetectorBot";
@@ -32,7 +34,13 @@ public class DetailsDetector extends TelegramLongPollingBot {
 	}
 
 	private static String detect(final Message message) {
-		return "Hai scritto: " + message.getText();
+		StringBuilder sb = new StringBuilder();
+		if (message.hasText())
+			sb.append("message text: ").append(message.getText()).append(end_line);
+		if (message.hasEntities()) {
+			// ~
+		}
+		return sb.toString();
 	}
 
 }
