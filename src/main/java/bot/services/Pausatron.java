@@ -7,20 +7,39 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.TimeZone;
 
-import org.quartz.*;
+import org.quartz.CronScheduleBuilder;
+import org.quartz.Job;
+import org.quartz.JobBuilder;
+import org.quartz.JobDetail;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.Trigger;
+import org.quartz.TriggerBuilder;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
+import bot.commons.BotConstants;
+import bot.commons.utils.BotUtil;
+
 public class Pausatron extends TelegramLongPollingBot implements Job {
+
+	public static final String START_RESPONSE = "Chat registrata";
+	public static final String STOP_RESPONSE = "Chat rimossa";
 
 	public static final String START_COMMAND = "start";
 	public static final String STOP_COMMAND = "stop";
 
-	private static final Set<Long> chatIDs = new HashSet<>();
+	private static Set<Long> chatIDs;
 
 	private static final String MESSAGE_TEXT = "_IT'S TIME TO REST_";
+
+	public Pausatron() {
+		reload();
+	}
 
 	@Override
 	public String getBotUsername() {
@@ -39,11 +58,23 @@ public class Pausatron extends TelegramLongPollingBot implements Job {
 			chatId = update.getMessage().getChatId();
 
 		if (checkMessage(update.getMessage(), START_COMMAND)) {
-			chatIDs.add(chatId);
+			BotUtil.write(chatId, BotConstants.PAUSATRON_RESOURCE_FILE_PATH);
+			reload();
+			sendSimpleMessage(chatId, START_RESPONSE);
 		}
 
 		if (checkMessage(update.getMessage(), STOP_COMMAND)) {
-			chatIDs.remove(chatId);
+			BotUtil.remove(chatId, BotConstants.PAUSATRON_RESOURCE_FILE_PATH);
+			reload();
+			sendSimpleMessage(chatId, STOP_RESPONSE);
+		}
+	}
+
+	private void sendSimpleMessage(final Long chatId, final String text) {
+		try {
+			super.execute(new SendMessage().setChatId(chatId).setText(text));
+		} catch (TelegramApiException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -58,6 +89,10 @@ public class Pausatron extends TelegramLongPollingBot implements Job {
 				}
 			}
 		}
+	}
+
+	private static void reload() {
+		chatIDs = new HashSet<>(BotUtil.read(BotConstants.PAUSATRON_RESOURCE_FILE_PATH));
 	}
 
 	public static void schedule(final Scheduler sched) throws SchedulerException {

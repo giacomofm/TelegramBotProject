@@ -44,6 +44,7 @@ public class BotUtil {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		lines.removeIf(s -> s.length() < 1);
 		return lines.stream().map(Long::parseLong).collect(Collectors.toList());
 	}
 
@@ -51,7 +52,7 @@ public class BotUtil {
 		try {
 			List<String> lines = Files.readAllLines(path);
 			lines.removeIf(s -> s.contains(chatId.toString()));
-			// TODO: rimuovere la singola riga o aggiornare l'intero elenco?
+			rewrite(path, ""); // XXX: rimuovere la singola riga o aggiornare l'intero elenco?
 			lines.forEach(s -> rewrite(path, s));
 		} catch (IOException e) {
 			e.printStackTrace();
