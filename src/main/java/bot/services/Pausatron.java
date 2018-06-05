@@ -3,7 +3,6 @@ package bot.services;
 import static bot.commons.utils.BotUtil.checkMessage;
 
 import java.time.ZoneId;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -22,9 +21,7 @@ import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
-import bot.commons.BotConstants;
-import bot.commons.utils.BotUtil;
-
+// TODO: Integrare con un archivio per salvare gli id delle chat
 public class Pausatron extends TelegramLongPollingBot implements Job {
 
 	public static final String START_RESPONSE = "Chat registrata";
@@ -37,11 +34,6 @@ public class Pausatron extends TelegramLongPollingBot implements Job {
 
 	private static final String MESSAGE_TEXT = "_IT'S TIME TO REST_";
 
-	public Pausatron() {
-		reload();
-		System.out.println("Pausatron ids: " + chatIDs);
-	}
-
 	@Override
 	public String getBotUsername() {
 		return "PausatronBot";
@@ -49,7 +41,8 @@ public class Pausatron extends TelegramLongPollingBot implements Job {
 
 	@Override
 	public String getBotToken() {
-		return "570584773:AAGqtNaqlXnIGAz5q2GjejbwFwYExhuv3aI";
+		// return "570584773:AAGqtNaqlXnIGAz5q2GjejbwFwYExhuv3aI";
+		return null;
 	}
 
 	@Override
@@ -59,14 +52,10 @@ public class Pausatron extends TelegramLongPollingBot implements Job {
 			chatId = update.getMessage().getChatId();
 
 		if (checkMessage(update.getMessage(), START_COMMAND)) {
-			BotUtil.write(chatId, BotConstants.PAUSATRON_RESOURCE_FILE_PATH);
-			reload();
 			sendSimpleMessage(chatId, START_RESPONSE);
 		}
 
 		if (checkMessage(update.getMessage(), STOP_COMMAND)) {
-			BotUtil.remove(chatId, BotConstants.PAUSATRON_RESOURCE_FILE_PATH);
-			reload();
 			sendSimpleMessage(chatId, STOP_RESPONSE);
 		}
 	}
@@ -90,10 +79,6 @@ public class Pausatron extends TelegramLongPollingBot implements Job {
 				}
 			}
 		}
-	}
-
-	private static void reload() {
-		chatIDs = new HashSet<>(BotUtil.read(BotConstants.PAUSATRON_RESOURCE_FILE_PATH));
 	}
 
 	public static void schedule(final Scheduler sched) throws SchedulerException {

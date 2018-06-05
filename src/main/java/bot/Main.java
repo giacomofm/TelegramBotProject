@@ -32,8 +32,8 @@ public class Main {
 			System.out.println("Yoer inizializzato");
 			botsApi.registerBot(new JekOrologio());
 			System.out.println("JekOrologio inizializzato");
-			botsApi.registerBot(new Pausatron());
-			System.out.println("Pausatron inizializzato");
+			// botsApi.registerBot(new Pausatron());
+			// System.out.println("Pausatron inizializzato");
 			botsApi.registerBot(new DetailsDetector());
 			System.out.println("DetailsDetector inizializzato");
 			startQuartzJob();
