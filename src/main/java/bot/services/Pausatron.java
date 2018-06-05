@@ -39,6 +39,7 @@ public class Pausatron extends TelegramLongPollingBot implements Job {
 
 	public Pausatron() {
 		reload();
+		System.out.println("Pausatron ids: " + chatIDs);
 	}
 
 	@Override
