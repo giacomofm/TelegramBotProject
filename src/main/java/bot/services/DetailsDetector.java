@@ -3,7 +3,9 @@ package bot.services;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.MessageEntity;
+import org.telegram.telegrambots.api.objects.PhotoSize;
 import org.telegram.telegrambots.api.objects.Update;
+import org.telegram.telegrambots.api.objects.Video;
 import org.telegram.telegrambots.api.objects.stickers.Sticker;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
@@ -48,6 +50,12 @@ public class DetailsDetector extends TelegramLongPollingBot {
 		if (message.getSticker() != null)
 			detectSticker(sb, message.getSticker());
 
+		if (message.hasPhoto())
+			message.getPhoto().stream().forEach(p -> detectPhoto(sb, p));
+
+		if (message.hasVideo())
+			detectVideo(sb, message.getVideo());
+
 		if (sb.length() > 0)
 			return sb.toString();
 		return "empty text";
@@ -72,6 +80,26 @@ public class DetailsDetector extends TelegramLongPollingBot {
 		sb.append("file height: ").append(sticker.getHeight()).append(end_line);
 		sb.append("file width: ").append(sticker.getWidth()).append(end_line);
 		sb.append("emoji: ").append(EmojiParser.parseToAliases(sticker.getEmoji())).append(end_line);
+	}
+
+	private static void detectPhoto(final StringBuilder sb, final PhotoSize photo) {
+		sb.append("-- photo info --").append(end_line);
+		sb.append("file id: ").append(photo.getFileId()).append(end_line);
+		sb.append("file size: ").append(photo.getFileSize()).append(end_line);
+		if (photo.hasFilePath())
+			sb.append("file path: ").append(photo.getFilePath()).append(end_line);
+		sb.append("photo height: ").append(photo.getHeight()).append(end_line);
+		sb.append("photo width: ").append(photo.getWidth()).append(end_line);
+	}
+
+	private static void detectVideo(final StringBuilder sb, final Video video) {
+		sb.append("-- video info --").append(end_line);
+		sb.append("file id: ").append(video.getFileId()).append(end_line);
+		sb.append("file size: ").append(video.getFileSize()).append(end_line);
+		sb.append("file mime type: ").append(video.getMimeType()).append(end_line);
+		sb.append("video height: ").append(video.getHeight()).append(end_line);
+		sb.append("video width: ").append(video.getWidth()).append(end_line);
+		sb.append("video duration: ").append(video.getDuration()).append(" seconds").append(end_line);
 	}
 
 }
