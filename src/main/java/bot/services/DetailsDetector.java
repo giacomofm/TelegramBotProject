@@ -1,6 +1,7 @@
 package bot.services;
 
 import org.telegram.telegrambots.api.methods.send.SendMessage;
+import org.telegram.telegrambots.api.objects.Document;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.MessageEntity;
 import org.telegram.telegrambots.api.objects.PhotoSize;
@@ -56,9 +57,12 @@ public class DetailsDetector extends TelegramLongPollingBot {
 		if (message.hasVideo())
 			detectVideo(sb, message.getVideo());
 
+		if (message.hasDocument())
+			detectDocument(sb, message.getDocument());
+
 		if (sb.length() > 0)
 			return sb.toString();
-		return "empty text";
+		return "nothing detectable";
 	}
 
 	private static void detectText(final StringBuilder sb, final String text) {
@@ -102,4 +106,11 @@ public class DetailsDetector extends TelegramLongPollingBot {
 		sb.append("video duration: ").append(video.getDuration()).append(" seconds").append(end_line);
 	}
 
+	private static void detectDocument(final StringBuilder sb, final Document document) {
+		sb.append("-- document info --").append(end_line);
+		sb.append("file id: ").append(document.getFileId()).append(end_line);
+		sb.append("file name: ").append(document.getFileName()).append(end_line);
+		sb.append("file size: ").append(document.getFileSize()).append(end_line);
+		sb.append("file mime type: ").append(document.getMimeType()).append(end_line);
+	}
 }
