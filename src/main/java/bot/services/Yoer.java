@@ -4,11 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.telegram.telegrambots.api.methods.send.SendMessage;
-import org.telegram.telegrambots.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -49,32 +47,13 @@ public class Yoer extends TelegramLongPollingBot {
 		if (BotUtil.checkMessage(update.getMessage(), START_ROUTINE_COMMAND)) {
 			startRoutine(chatId, update.getMessage());
 		}
-		if (BotUtil.checkMessage(update.getMessage(), keyboardButtonA.getText())
-				|| BotUtil.checkMessage(update.getMessage(), keyboardButtonB.getText())) {
-			closeRoutine(chatId, update.getMessage());
-		}
 	}
 
 	private void startRoutine(final Long chatId, final Message message) {
 		try {
-			execute(new SendMessage().setChatId(chatId)//
-					.setText(message.getFrom().getFirstName() + ADDITIONAL_TEXT)//
+			execute(new SendMessage().setChatId(chatId) //
+					.setText(message.getFrom().getFirstName() + ADDITIONAL_TEXT) //
 					.setReplyMarkup(new ReplyKeyboardMarkup().setKeyboard(keyboard)));
-
-			closeRoutine(chatId, message);
-		} catch (final TelegramApiException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void closeRoutine(final Long chatId, final Message message) {
-		try {
-			final Message replay = execute(new SendMessage().setChatId(chatId)//
-					.setText(":+1:")//
-					.setReplyToMessageId(message.getMessageId())//
-					.setReplyMarkup(new ReplyKeyboardRemove().setSelective(true)));
-
-			execute(new DeleteMessage().setChatId(replay.getChatId()).setMessageId(replay.getMessageId()));
 		} catch (final TelegramApiException e) {
 			e.printStackTrace();
 		}
