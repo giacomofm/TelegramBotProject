@@ -18,24 +18,24 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 public class JekOrologio extends TelegramLongPollingBot {
 
 	/**
-	 * porcodio - (to 18:00) Informa su quanto manca alle 18:00
+	 * endtime - (to 18:00) Informa su quanto manca alle 18:00
 	 */
-	public static final String ASK_END_TIME_COMMAND = "porcodio";
+	public static final String ASK_END_TIME_COMMAND = "endtime";
 	/**
-	 * diocane - (to 13:00) Informa su quanto manca alle 13:00
+	 * lunchtime - (to 13:00) Informa su quanto manca alle 13:00
 	 */
-	public static final String ASK_LUNCH_TIME_COMMAND = "diocane";
+	public static final String ASK_LUNCH_TIME_COMMAND = "lunchtime";
 	/**
-	 * madonnavacca - (to 18:00 ven) Informa su quante ore mancano alle 18:00 di venerdi
+	 * weekend - (to 18:00 ven) Informa su quante ore mancano alle 18:00 di venerdi
 	 */
-	public static final String ASK_WEEKEND_TIME_COMMAND = "madonnavacca";
+	public static final String ASK_WEEKEND_TIME_COMMAND = "weekend";
 
 	private static final LocalTime end_time = LocalTime.of(18, 0);
 	private static final LocalTime lunch_time = LocalTime.of(13, 0);
 
 	private static final int seconds_to_weekend = 60 * 10;
 
-	private static final String lunch_time_additional_text = " _AL PRANSO_";
+	private static final String lunch_time_additional_text = " _AL PRANZO_";
 	private static final String weekend_additional_text = " _AL WEEKEND_";
 	private static final String in_weekend_text = "GODITI IL WEEKEND";
 
